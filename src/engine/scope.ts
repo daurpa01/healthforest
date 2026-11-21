@@ -222,6 +222,8 @@ function bind(state: ScopeState): RuntimeScope {
     warnings: state.warnings,
     get(name: string) {
       if (name in state.keywords) return state.keywords[name]
+      const folded = name.toLowerCase()
+      if (folded in state.keywords) return state.keywords[folded]
       if (name in state.locals) return state.locals[name]
       if (name in state.overrides) return state.overrides[name]
       if (!state.dynamic.has(name) && state.cache.has(name)) return state.cache.get(name)!

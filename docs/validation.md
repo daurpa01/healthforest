@@ -90,6 +90,59 @@ Lo que sí cierra, al centavo, es la suma que ya está en el libro. HealthForest
 
 Los totales pedidos (364528.81 … y 451529.16 …) son exactamente la columna “Costo total” del libro. El resto, unos 227–232 mil para Onclarity y 170–175 mil para Cobas, no está desglosado. Sin el costo de la tamización y la población de cada año no se puede decir de qué está hecho.
 
+## Kibo Hut: Markov de un fármaco nuevo
+
+El paquete gratuito de [kibohut.com/download](https://www.kibohut.com/download) trae el mismo modelo en TreeAge y en Excel. No incluye una licencia de redistribución, así que HealthForest no lo guarda como ejemplo. El importador leyó los dos `.trex` en esta máquina y el resultado se comparó con una reconstrucción hecha a partir de las fórmulas publicadas (edad, tablas, razones de riesgo y `discount`) y con la hoja de resultados del Excel.
+
+El `.trex` arranca a los 60 años y para cuando `_stage = 120`. La hoja de resultados del Excel está guardada con inicio a los 40 años y horizonte hasta los 110 (71 ciclos). Son dos escenarios del mismo modelo. El video de PSA dice un RCEI de unos 22.000 y una CEAC de 0,2 % a disposición a pagar 0 y 3,8 % a 10.000. Esas cifras no salen de estos archivos.
+
+### El archivo, tal como está (60 años, 120 ciclos)
+
+El `.trex` determinista y el probabilístico, evaluados en su media, dan lo mismo. La reconstrucción independiente da los mismos dígitos.
+
+| Estrategia | HealthForest (importado) | Reconstrucción | Diferencia |
+| --- | ---: | ---: | ---: |
+| Fármaco viejo, costo | 457935.83 | 457935.83 | 0 |
+| Fármaco viejo, AVAC | 6.373392 | 6.373392 | 0 |
+| Fármaco nuevo, costo | 532237.40 | 532237.40 | 0 |
+| Fármaco nuevo, AVAC | 7.065923 | 7.065923 | 0 |
+
+RCEI del nuevo frente al viejo: (532237.40 − 457935.83) / (7.065923 − 6.373392) = **107289 SEK por AVAC**.
+
+### El escenario que está guardado en el Excel (40 años, hasta los 110)
+
+| Estrategia | Excel | HealthForest | Diferencia | % |
+| --- | ---: | ---: | ---: | ---: |
+| Viejo, costo | 378797.52 | 378797.54 | 0.02 | 0.000005 % |
+| Viejo, AVAC | 11.598514 | 11.598517 | 0.000002 | 0.00002 % |
+| Nuevo, costo | 687945.80 | 687946.14 | 0.34 | 0.00005 % |
+| Nuevo, AVAC | 12.246668 | 12.246676 | 0.000007 | 0.00006 % |
+| RCEI | 476967.35 | 476964 | −3 | 0.0007 % |
+
+La diferencia cabe en el redondeo del último ciclo, cuando ya casi no queda nadie vivo. El trazo del Excel y el de HealthForest usan el mismo descuento por `_stage`, sin medio ciclo: el ciclo 0 del fármaco viejo es 5.000 coronas y 0,8 AVAC.
+
+### PSA del archivo probabilístico
+
+Mil repeticiones, semilla 2024. No hay distribuciones en el archivo determinista. En el probabilístico, los costos y las razones de riesgo son gamma o normal; la utilidad sana es beta. La utilidad de la enfermedad está guardada como gamma en el `.trex` (el Excel la etiqueta como beta). La mediana del RCEI fue **107072**, al lado del caso base de 107289, no de 22000.
+
+| Disposición a pagar | Video (aproximado) | HealthForest, fracción a favor del fármaco nuevo |
+| --- | ---: | ---: |
+| 0 | 0.2 % | 6.2 % |
+| 10.000 | 3.8 % | 7.9 % |
+| 500.000 | no dicho | 97.3 % |
+
+El video y este archivo no describen la misma nube. El archivo, leído y corrido, se concentra alrededor de 107.000 SEK por AVAC.
+
+## Los ejemplos cortos de los tutoriales
+
+| Caso | Qué se pidió | HealthForest |
+| --- | --- | --- |
+| Cáncer, medio ciclo | 83 % se queda, 15 % progresa, 2 % muere. El costo local de 20.000 pasa a 10.000 en el ciclo 0. Al ciclo siguiente, 15 % × 50.000 = 7.500. Las muertes nuevas son 1,66 % desde local y 1,5 % desde metástasis | Igual, diferencia 0 |
+| Robots A y B | Con p = 0,25 el RCEI es 20.000 y se elige B si la disposición a pagar es 50.000. El umbral de beneficio neto es 0,375 | Igual. Los pagos de los terminales no se dijeron en el video; se armaron para cumplir esas dos cifras y nada más |
+| Mezcla de 2022 | 0,8 × 76,7 % + 0,2 × 74,2 % = 76,2 % muertos | 76,2 %, diferencia 0 |
+| Evento discreto | 3,5 años × 2.000 = 7.000. 3,8 años × 1.000 = 3.800 | Igual |
+| Pagos aguas arriba | Un pago en un nodo intermedio entra en cada camino | El informe de caminos lo suma |
+
 ## Ejemplo en la aplicación
 
 En la portada, **Vacunas IECS** abre `Arbol2.trex` ya importado, con el nombre “Vacunas IECS (importado de TreeAge)”. También se puede usar **Abrir** con cualquier `.trex`. El umbral de pago no venía en el archivo; el ejemplo usa 5000 para que la comparación se lea en la tabla.

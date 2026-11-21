@@ -7,7 +7,43 @@ import { tornado } from './sensitivity'
 import { importTrex, translateTreeAgeFormula, trexNotes } from './trex'
 import { rollback } from './tree'
 
+const markovTrex = `<?xml version="1.0"?>
+<tree:Tree>
+  <Node NodeType="DecisionNode" NameID="Root">
+    <Node Label="estrategia" NodeType="MarkovNode">
+      <Node Label="vivo" NodeType="ChanceNode">
+        <Prob Value="1"/>
+        <MarkovData xsi:type="tree:MarkovNonAbsorbingStateData">
+          <StateReward Set="1"><Init Value="10"/><Incr Value="10"/><Final Value="0"/></StateReward>
+          <StateReward Set="2"><Init Value="1"/><Incr Value="1"/><Final Value="0"/></StateReward>
+        </MarkovData>
+        <Node Label="sigue" NodeType="TerminalNode"><Prob Value="#"/><MarkovData MarkovJumpState="vivo"/></Node>
+        <Node Label="muere" NodeType="TerminalNode"><Prob Value="tabla[0]"/><MarkovData MarkovJumpState="muerto"/></Node>
+      </Node>
+      <Node Label="muerto" NodeType="TerminalNode"><Prob Value="0"/><MarkovData xsi:type="tree:MarkovStateData"/></Node>
+      <Termination Value="_STAGE = 2"/>
+    </Node>
+  </Node>
+  <Table NameID="tabla" LookupMethod="Exact">
+    <Row Index="0" Values="0.25"/>
+  </Table>
+  <Distribution NameID="costo_dist" Type="Gamma">
+    <Parameter Name="alpha" Value="100"/>
+    <Parameter Name="lambda" Value="0.01"/>
+  </Distribution>
+</tree:Tree>`
+
 describe('importador TreeAge', () => {
+  it('importa un Markov con _stage, tabla y distribución', () => {
+    const model = importTrex(markovTrex)
+    const result = rollback(model)
+    expect(result.strategies[0].cost).toBeCloseTo(17.5, 6)
+    expect(result.strategies[0].effect).toBeCloseTo(1.75, 6)
+    expect(model.tables[0].rows[0]).toEqual([0, 0.25])
+    expect(model.variables.find((item) => item.name === 'costo_dist')?.distribution?.type).toBe('gamma')
+    expect(model.tree.branches[0].child.markov?.termination).toBe('_stage = 2')
+  })
+
   it('traduce el punto y coma de los argumentos', () => {
     expect(translateTreeAgeFormula('annuity(desc;78)*1')).toBe('annuity(desc,78)*1')
     expect(translateTreeAgeFormula('discount(350;desc;30)')).toBe('discount(350,desc,30)')

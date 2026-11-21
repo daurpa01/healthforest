@@ -8,7 +8,7 @@ La arquitectura deja el cálculo en `src/engine` (funciones puras, sin interfaz)
 
 **Fase 1, esta entrega.** Árbol, rollback, costo-efectividad, Markov de cohorte, microsimulación, sensibilidad, Monte Carlo de segundo orden, presupuesto, ejemplos, pruebas, temas y exportación.
 
-**Fase 2.** Supervivencia particionada, simulación de eventos discretos, importar Markov y distribuciones desde `.trex` (el árbol de decisión ya se importa), ajuste de curvas a Kaplan–Meier, sensibilidad de tres vías, asistente completo de distribuciones con matriz de correlación editable, informe PDF de todo el análisis, distribuciones bootstrap y lotes de simulación.
+**Fase 2.** Ajuste de curvas a Kaplan–Meier, sensibilidad de tres vías en la interfaz, asistente completo de distribuciones con matriz de correlación editable, informe PDF de todo el análisis y lotes de simulación. La supervivencia particionada, la simulación de eventos, el SIR, la calibración de un parámetro, el diagrama de estados y la importación de Markov desde `.trex` ya están en el motor.
 
 **Fase 3.** Recursos y colas en la simulación de eventos, más idiomas, y una batería de modelos publicados para comparar números con otros programas (sin copiar los archivos de ejemplo de TreeAge).
 
@@ -32,12 +32,17 @@ La arquitectura deja el cálculo en `src/engine` (funciones puras, sin interfaz)
 | Descuento al inicio, mitad o fin del ciclo | Hecho |
 | Condición de parada | Hecho |
 | Traza de la cohorte y supervivencia | Hecho |
-| Diagrama de estados | Hecho, lectura |
+| Diagrama de estados | Hecho. Se dibuja desde el Markov y el Markov se reconstruye desde el diagrama |
 | Gráfico de Markov contra Kaplan–Meier y ajuste de curvas | Fase 2 |
 | Microsimulación (primer orden), rastreadores, semilla | Hecho |
+| Remuestreo de características (bootstrap) con semilla | Hecho |
 | Distribución por paciente y por ciclo | Hecho |
-| Supervivencia particionada | Fase 2 |
-| Simulación de eventos discretos | Fase 2 |
+| Supervivencia particionada | Hecho. Curvas exponencial, Weibull y lognormal; el estado es el área entre PFS y OS |
+| Simulación de eventos discretos | Hecho. Relojes exponenciales en competencia y costo por el tiempo de espera |
+| Cohorte dinámica / SIR no coherente | Hecho. Conteos, nodo de entrada y tasa que cambia en el tiempo |
+| Calibración | Hecho para un parámetro, con límites y error cuadrático |
+| Pagos aguas arriba e informe de caminos | Hecho |
+| Costo de Markov por periodo (exportación de presupuesto) | Hecho, CSV |
 
 ## Costo-efectividad
 
@@ -114,3 +119,38 @@ Medido con `npm run build` (sin las fuentes web, que se quitaron para abrir más
 | Worker de simulación | 41 KB | Al pulsar Simular |
 
 En el navegador de prueba la interfaz escribió «lista en 145 ms». Las simulaciones no bloquean la pantalla: van en un worker y se pueden cancelar.
+
+## Tutoriales de TreeAge (la lista del historial)
+
+Cada fila es una función que aparece en `TREEAGE_TUTORIAL_SPEC`. «Hecho» significa que el motor lo calcula y hay una prueba. «Parcial» significa que está la idea, no el diálogo completo de TreeAge.
+
+| Función del tutorial | Estado |
+| --- | --- |
+| Nodos de decisión, azar, terminal, Markov, lógico y clon | Hecho |
+| Nodo etiqueta / marcador | No. No cambia el cálculo |
+| Diagrama de estados y vuelta al árbol | Hecho |
+| Supervivencia particionada (PFS, OS, área entre curvas) | Hecho. Falta el informe mensual como pantalla propia |
+| Simulación de eventos, eventos en competencia, costo por el tiempo | Hecho |
+| Nodo de entrada y cohorte que no suma 100 % | Hecho, en el SIR |
+| Probabilidad de infección según los infectados actuales | Hecho |
+| Tasa de transmisión que baja después de un día | Hecho |
+| `_stage`, tablas por edad, razones de riesgo, `discount` | Hecho. Es el modelo de Kibo |
+| Recompensa de estado y peaje de transición | Hecho |
+| Medio ciclo visible en el trazo | Hecho. El cáncer de ejemplo cobra 10.000 de 20.000 en el ciclo 0 |
+| Informe de cohorte | Hecho |
+| Informe que mezcla varios Markov de una estrategia (0,8 y 0,2 → 76,2 %) | Hecho |
+| Curvas de supervivencia superpuestas | Parcial. El panel de supervivencia particionada dibuja PFS y OS juntas |
+| Túneles | Hecho en el motor. Ningún tutorial de esta lista los usa |
+| Microsimulación, rastreadores, semilla | Hecho |
+| Rastreadores globales y colas de recursos | No |
+| Bootstrap de características con semilla | Hecho |
+| Depuración de un paciente (traza de rastreadores) | Parcial. Hay una traza por paciente; no es la consola de TreeAge |
+| Pagos aguas arriba e informe de caminos | Hecho |
+| Calibración a un objetivo (error cuadrático, límites) | Hecho para un parámetro. Falta Weibull → probabilidad y varios objetivos a la vez |
+| Sensibilidad de una vía, umbral, tornado, dos vías | Hecho |
+| Tres vías | No en la interfaz. El archivo de Kibo guarda la lista de variables |
+| Distribuciones gamma, normal y beta enlazadas a variables | Hecho en el importador |
+| PSA, plano, CEAC, EVPI, EVPPI | Hecho. CEAF también, aunque esos videos no lo nombran |
+| Exportar el costo del Markov por periodo | Hecho, CSV. La adopción por año calendario sigue en el módulo de presupuesto |
+| Comentarios del modelo y comparación de dos modelos | Parcial. Cada nodo tiene notas. No hay una vista de comparación |
+| Asistente de pagos extra y frente de Excel | No |

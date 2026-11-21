@@ -2,6 +2,10 @@ import { useMemo, useState } from 'react'
 import { oneWay, threshold, tornado, twoWay } from '../engine/sensitivity'
 import { evppiBinned, strategyNmbTable, type PSASummary, type PSATrial } from '../engine/psa'
 import { biaOneWay, runBia } from '../engine/bia'
+import { markovToDiagram } from '../engine/diagram'
+import { pathwayReport } from '../engine/pathway'
+import { costsByPeriod, periodCsv } from '../engine/periods'
+import { runPartsa } from '../engine/partsa'
 import type { MicroResult } from '../engine/microsim'
 import { useApp } from '../model/store'
 import { downloadBlob, toCsv } from '../export'
@@ -91,6 +95,7 @@ export function ResultsView() {
         <h3>{t(lang, 'frontier')}</h3>
         <FrontierChart cea={cea} wtp={prefs.wtp} formatX={(value) => formatNum(value, 2, lang)} formatY={money} xLabel={t(lang, 'effect')} yLabel={t(lang, 'cost')} />
       </div>
+      <PathwayTable />
       {app.analysis.ok && app.analysis.roll.warnings.length > 0 && (
         <div className="banner">{app.analysis.roll.warnings.map((warning) => tError(lang, warning.code, warning.detail ?? '')).join(' ')}</div>
       )}
@@ -188,6 +193,8 @@ export function MarkovView() {
         <h3>{t(lang, 'stateDiagram')}</h3>
         <StateDiagram spec={node.markov} />
       </div>
+      <PeriodCosts cycles={cohort.cycles} />
+      <PartsaPanel />
       <div className="btn-row" style={{ marginTop: 12 }}>
         <button
           className="btn-gold"
@@ -217,37 +224,123 @@ export function MarkovView() {
 
 
 function StateDiagram({ spec }: { spec: NonNullable<TreeNode['markov']> }) {
-  const n = spec.states.length
+  const diagram = markovToDiagram(spec)
+  const n = Math.max(diagram.states.length, 1)
   const cx = 280
   const cy = 150
   const r = 100
+  const pos = (index: number) => {
+    const angle = (index / n) * Math.PI * 2 - Math.PI / 2
+    return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) }
+  }
   return (
-    <svg viewBox="0 0 560 300" className="plot">
-      {spec.states.map((state, index) => {
-        const angle = (index / n) * Math.PI * 2 - Math.PI / 2
-        const x = cx + r * Math.cos(angle)
-        const y = cy + r * Math.sin(angle)
-        return spec.states.map((target, targetIndex) => {
-          const transition = state.transitions.find((item) => item.to === target.id)
-          if (!transition || state.id === target.id) return null
-          const angle2 = (targetIndex / n) * Math.PI * 2 - Math.PI / 2
-          const x2 = cx + r * Math.cos(angle2)
-          const y2 = cy + r * Math.sin(angle2)
-          return <line key={`${state.id}-${target.id}`} x1={x} y1={y} x2={x2} y2={y2} stroke="#c9bba6" />
-        })
+    <svg viewBox="0 0 560 300" className="plot" role="img">
+      {diagram.transitions.map((transition, index) => {
+        if (transition.from === transition.to) return null
+        const a = diagram.states.findIndex((state) => state.id === transition.from)
+        const b = diagram.states.findIndex((state) => state.id === transition.to)
+        if (a < 0 || b < 0) return null
+        const p1 = pos(a)
+        const p2 = pos(b)
+        return <line key={`${transition.from}-${transition.to}-${index}`} x1={p1.x} y1={p1.y} x2={p2.x} y2={p2.y} stroke="#c9bba6" />
       })}
-      {spec.states.map((state, index) => {
-        const angle = (index / n) * Math.PI * 2 - Math.PI / 2
-        const x = cx + r * Math.cos(angle)
-        const y = cy + r * Math.sin(angle)
+      {diagram.states.map((state, index) => {
+        const p = pos(index)
         return (
           <g key={state.id}>
-            <circle cx={x} cy={y} r="28" fill={state.absorbing ? '#a33b24' : '#1f6b4c'} />
-            <text x={x} y={y + 4} textAnchor="middle" fill="white" fontSize="11">{state.name}</text>
+            <circle cx={p.x} cy={p.y} r="28" fill={state.absorbing ? '#a33b24' : '#1f6b4c'} />
+            <text x={p.x} y={p.y + 4} textAnchor="middle" fill="white" fontSize="11">{state.name}</text>
           </g>
         )
       })}
     </svg>
+  )
+}
+
+function PathwayTable() {
+  const app = useApp()
+  const lang = app.lang
+  const rows = useMemo(() => {
+    try {
+      return pathwayReport(app.model).filter((row) => row.labels.length).slice(0, 8)
+    } catch {
+      return []
+    }
+  }, [app.model])
+  if (rows.length < 2) return null
+  return (
+    <div className="table-wrap" style={{ marginTop: 14 }}>
+      <h3>{t(lang, 'pathways')}</h3>
+      <table>
+        <thead><tr><th>{t(lang, 'strategy')}</th><th className="num">{t(lang, 'probability')}</th><th className="num">{t(lang, 'cost')}</th><th className="num">{t(lang, 'effect')}</th></tr></thead>
+        <tbody>
+          {rows.map((row, index) => (
+            <tr key={index}>
+              <td>{row.labels.join(' · ')}</td>
+              <td className="num">{formatNum(row.probability, 3, lang)}</td>
+              <td className="num">{formatNum(row.payoffs.cost ?? 0, 2, lang)}</td>
+              <td className="num">{formatNum(row.payoffs.effect ?? 0, 3, lang)}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+function PeriodCosts({ cycles }: { cycles: { stage: number; occupancy: Record<string, number>; occupancyNext: Record<string, number>; reward: { cost?: number; effect?: number }; discounted: { cost?: number; effect?: number }; discountFactor: number; cumulative: { cost?: number; effect?: number } }[] }) {
+  const lang = useApp().lang
+  const rows = costsByPeriod(cycles).slice(0, 12)
+  return (
+    <div className="section">
+      <div className="view-head">
+        <h3>{t(lang, 'periodCosts')}</h3>
+        <button className="btn" onClick={() => downloadBlob('periodos.csv', new Blob([periodCsv(costsByPeriod(cycles))], { type: 'text/csv' }))}>{t(lang, 'exportCsv')}</button>
+      </div>
+      <div className="table-wrap">
+        <table>
+          <thead><tr><th>{t(lang, 'stage')}</th><th className="num">{t(lang, 'cost')}</th><th className="num">{t(lang, 'effect')}</th></tr></thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.period}><td>{row.period}</td><td className="num">{formatNum(row.cost, 2, lang)}</td><td className="num">{formatNum(row.effect, 3, lang)}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}
+
+function PartsaPanel() {
+  const lang = useApp().lang
+  const [pfs, setPfs] = useState(0.2)
+  const [os, setOs] = useState(0.1)
+  const result = runPartsa({
+    pfs: { kind: 'exponential', a: pfs },
+    os: { kind: 'exponential', a: os },
+    cycles: 60,
+    cycleLength: 1,
+    rewards: { pf: { cost: 12000, effect: 0.8 }, progressed: { cost: 40000, effect: 0.5 }, dead: { cost: 0, effect: 0 } },
+    discountRate: 0.03,
+    payoffIds: ['cost', 'effect'],
+  })
+  return (
+    <div className="section">
+      <h3>{t(lang, 'partsa')}</h3>
+      <p className="help">{t(lang, 'partsaHelp')}</p>
+      <div className="btn-row">
+        <label className="field"><span>PFS</span><input value={pfs} onChange={(event) => setPfs(Number(event.target.value))} /></label>
+        <label className="field"><span>OS</span><input value={os} onChange={(event) => setOs(Number(event.target.value))} /></label>
+      </div>
+      <div className="kpi-row">
+        <div className="kpi"><span className="kicker">{t(lang, 'cost')}</span><b>{formatNum(result.total.cost, 0, lang)}</b></div>
+        <div className="kpi"><span className="kicker">{t(lang, 'effect')}</span><b>{formatNum(result.total.effect, 2, lang)}</b></div>
+      </div>
+      <LineChart series={[
+        { name: 'PFS', color: '#1f6b4c', points: result.cycles.map((row) => ({ x: row.stage, y: row.pf })) },
+        { name: 'OS', color: '#1e4d7b', points: result.cycles.map((row) => ({ x: row.stage, y: row.pf + row.progressed })) },
+      ]} yFormat={(value) => formatNum(value, 2, lang)} />
+    </div>
   )
 }
 

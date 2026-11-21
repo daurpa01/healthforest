@@ -350,6 +350,12 @@ class Parser {
         }
         return { t: 'call', name, args }
       }
+      if (this.eat('[')) {
+        const key = this.parseOr()
+        this.skip()
+        if (!this.eat(']')) throw new EngineError('syntax', ']')
+        return { t: 'call', name: 'lookup', args: [{ t: 'str', v: name }, key] }
+      }
       return { t: 'name', name }
     }
     throw new EngineError('syntax', this.rest())
