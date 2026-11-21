@@ -5,4 +5,3 @@ src-tauri/gen
 *.log
 .vite
 coverage
-dist/assets
