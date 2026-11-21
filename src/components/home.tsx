@@ -1,3 +1,4 @@
+import { importTrex } from '../engine/trex'
 import { blankModel } from '../model/defaults'
 import { decisionExample, markovExample } from '../model/examples'
 import { readSaved, useApp } from '../model/store'
@@ -33,6 +34,23 @@ export function HomeView() {
         </article>
         <article className="card">
           <span className="card-index">03</span>
+          <h3>{t(lang, 'welcomeVaccine')}</h3>
+          <p>{t(lang, 'welcomeVaccineBody')}</p>
+          <button
+            className="btn-gold"
+            onClick={() => {
+              void import('../../examples/arbol2.trex?raw').then((mod) => {
+                const model = importTrex(mod.default)
+                model.name = 'Vacunas IECS (importado de TreeAge)'
+                app.load(model, 'tree')
+              })
+            }}
+          >
+            {t(lang, 'openExample')}
+          </button>
+        </article>
+        <article className="card">
+          <span className="card-index">04</span>
           <h3>{t(lang, 'welcomeBlank')}</h3>
           <p>{t(lang, 'welcomeBlankBody')}</p>
           <div className="btn-row">

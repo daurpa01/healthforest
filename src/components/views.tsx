@@ -89,7 +89,7 @@ export function ResultsView() {
       </div>
       <div className="chart-card" style={{ marginTop: 14 }}>
         <h3>{t(lang, 'frontier')}</h3>
-        <FrontierChart cea={cea} wtp={prefs.wtp} formatX={(value) => formatNum(value, 2, lang)} formatY={money} />
+        <FrontierChart cea={cea} wtp={prefs.wtp} formatX={(value) => formatNum(value, 2, lang)} formatY={money} xLabel={t(lang, 'effect')} yLabel={t(lang, 'cost')} />
       </div>
       {app.analysis.ok && app.analysis.roll.warnings.length > 0 && (
         <div className="banner">{app.analysis.roll.warnings.map((warning) => tError(lang, warning.code, warning.detail ?? '')).join(' ')}</div>

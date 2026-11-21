@@ -8,7 +8,7 @@ La arquitectura deja el cálculo en `src/engine` (funciones puras, sin interfaz)
 
 **Fase 1, esta entrega.** Árbol, rollback, costo-efectividad, Markov de cohorte, microsimulación, sensibilidad, Monte Carlo de segundo orden, presupuesto, ejemplos, pruebas, temas y exportación.
 
-**Fase 2.** Supervivencia particionada, simulación de eventos discretos, lectura de archivos de TreeAge (`.trex`), ajuste de curvas a Kaplan–Meier, sensibilidad de tres vías, asistente completo de distribuciones con matriz de correlación editable, informe PDF de todo el análisis, distribuciones bootstrap y lotes de simulación.
+**Fase 2.** Supervivencia particionada, simulación de eventos discretos, importar Markov y distribuciones desde `.trex` (el árbol de decisión ya se importa), ajuste de curvas a Kaplan–Meier, sensibilidad de tres vías, asistente completo de distribuciones con matriz de correlación editable, informe PDF de todo el análisis, distribuciones bootstrap y lotes de simulación.
 
 **Fase 3.** Recursos y colas en la simulación de eventos, más idiomas, y una batería de modelos publicados para comparar números con otros programas (sin copiar los archivos de ejemplo de TreeAge).
 
@@ -16,7 +16,7 @@ La arquitectura deja el cálculo en `src/engine` (funciones puras, sin interfaz)
 
 | Función de TreeAge | Estado |
 | --- | --- |
-| Árboles de decisión | Hecho |
+| Árboles de decisión | Hecho. También se importa un `.trex` de decisión (nodos, fórmulas con `;`, `#`, variables y rangos) |
 | Nodos de decisión, azar y terminal | Hecho |
 | Nodo lógico | Hecho |
 | Clones y maestros de clon | Hecho (marcar, insertar y calcular) |

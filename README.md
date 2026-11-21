@@ -43,7 +43,7 @@ Quien compile en su máquina necesita Node 22, Rust y las librerías de Tauri 2.
 - Monte Carlo de segundo orden (beta, gamma, lognormal, normal, uniforme, triangular, Dirichlet, normal multivariada y más), plano, CEAC, CEAF, EVPI y una estimación de EVPPI.
 - Presupuesto al estilo ISPOR: población, adopción, mundo actual y nuevo, impacto anual y acumulado, sensibilidad.
 - Temas claro, oscuro y de publicación. Exportar el árbol a SVG, PNG y PDF, y las tablas a CSV.
-- Dos ejemplos listos: un árbol simple y una enfermedad crónica.
+- Tres ejemplos: un árbol simple, una enfermedad crónica y el árbol de vacunas IECS 2017 importado de TreeAge (`.trex`). La comparación con las cuentas hechas a mano está en [docs/validation.md](docs/validation.md).
 
 El mapa de lo que falta para parecerse del todo a TreeAge Pro está en [docs/treeage-parity.md](docs/treeage-parity.md).
 
@@ -88,7 +88,7 @@ Desktop installers for Windows, macOS and Linux are built when a `v*` tag is pus
 
 ## What works in this version
 
-Decision trees (decision, chance, terminal, Markov, logic, clone), complement probabilities, formulas, rollback, ICERs, strong and extended dominance, the efficient frontier, willingness to pay and net benefit. Cohort Markov models with initial, incremental and final rewards, within-cycle correction, Simpson integration, tunnels, `_stage` and `_age`, lookup tables, discounting and a trace. Seeded microsimulation in a worker, with progress and cancel. One-way, tornado, two-way and threshold sensitivity. Second-order Monte Carlo with the usual distributions, plus the CE plane, CEAC, CEAF, EVPI and a binned EVPPI estimate. An ISPOR-style budget impact module. Light, dark and publication themes. SVG, PNG, PDF and CSV export. Two example models.
+Decision trees (decision, chance, terminal, Markov, logic, clone), complement probabilities, formulas, rollback, ICERs, strong and extended dominance, the efficient frontier, willingness to pay and net benefit. Cohort Markov models with initial, incremental and final rewards, within-cycle correction, Simpson integration, tunnels, `_stage` and `_age`, lookup tables, discounting and a trace. Seeded microsimulation in a worker, with progress and cancel. One-way, tornado, two-way and threshold sensitivity. Second-order Monte Carlo with the usual distributions, plus the CE plane, CEAC, CEAF, EVPI and a binned EVPPI estimate. An ISPOR-style budget impact module. Light, dark and publication themes. SVG, PNG, PDF and CSV export. Three examples, including an IECS 2017 vaccine tree imported from TreeAge. The comparison is in [docs/validation.md](docs/validation.md).
 
 The gap to full TreeAge Pro parity is listed in [docs/treeage-parity.md](docs/treeage-parity.md).
 

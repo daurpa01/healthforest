@@ -1,4 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { importTrex } from './engine/trex'
 import { normalizeModel } from './model/defaults'
 import { readTree } from './model/treeops'
 import { StoreProvider, useApp, type View } from './model/store'
@@ -102,11 +103,20 @@ function Shell() {
           </button>
           <button className="btn-gold" onClick={() => app.setLang(lang === 'es' ? 'en' : 'es')}>{lang === 'es' ? 'EN' : 'ES'}</button>
           <button className="btn-ghost" onClick={() => app.setHelp(true)} title={t(lang, 'help')}>?</button>
-          <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={async (event) => {
+          <input ref={fileRef} type="file" accept=".json,.trex,.xml,application/json" hidden onChange={async (event) => {
             const file = event.target.files?.[0]
             event.target.value = ''
             if (!file) return
-            try { app.load(normalizeModel(JSON.parse(await file.text()))) } catch (error) { window.alert(error instanceof Error ? error.message : 'JSON') }
+            try {
+              const text = await file.text()
+              if (file.name.toLowerCase().endsWith('.trex') || text.includes('<tree:Tree') || text.includes('NodeType=')) {
+                const model = importTrex(text)
+                model.name = file.name.replace(/\.trex$/i, '')
+                app.load(model)
+              } else app.load(normalizeModel(JSON.parse(text)))
+            } catch (error) {
+              window.alert(error instanceof Error ? error.message : 'archivo')
+            }
           }} />
         </header>
         {!app.analysis.ok && app.view !== 'home' && (

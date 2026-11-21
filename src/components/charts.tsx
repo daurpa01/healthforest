@@ -12,66 +12,101 @@ export function FrontierChart({
   wtp,
   formatX,
   formatY,
+  xLabel = 'Efecto',
+  yLabel = 'Costo',
 }: {
   cea: CeaResult
   wtp: number
   formatX: (n: number) => string
   formatY: (n: number) => string
+  xLabel?: string
+  yLabel?: string
 }) {
   const rows = cea.strategies
   if (!rows.length) return null
-  const pad = { l: 56, r: 16, t: 16, b: 36 }
-  const w = 560
-  const h = 320
-  const xs = rows.map((row) => row.effect)
-  const ys = rows.map((row) => row.cost)
-  const x0 = Math.min(...xs, 0)
-  const x1 = Math.max(...xs) * 1.08 + 0.01
-  const y0 = Math.min(...ys, 0)
-  const y1 = Math.max(...ys) * 1.12 + 1
+  const pad = { l: 78, r: 28, t: 22, b: 46 }
+  const w = 640
+  const h = 380
+  const [x0, x1] = paddedDomain(rows.map((row) => row.effect))
+  const [y0, y1] = paddedDomain(rows.map((row) => row.cost))
   const X = (x: number) => pad.l + ((x - x0) / (x1 - x0)) * (w - pad.l - pad.r)
   const Y = (y: number) => h - pad.b - ((y - y0) / (y1 - y0)) * (h - pad.t - pad.b)
   const frontier = cea.frontierIds
     .map((id) => rows.find((row) => row.id === id))
     .filter((row): row is (typeof rows)[number] => Boolean(row))
   const optimal = rows.find((row) => row.id === cea.optimalId)
-  const line = optimal
-    ? [
-        [x0, optimal.cost - wtp * (optimal.effect - x0)],
-        [x1, optimal.cost + wtp * (x1 - optimal.effect)],
-      ]
-    : []
+  const xTicks = tickValues(x0, x1, 4)
+  const yTicks = tickValues(y0, y1, 4)
+  const wtpLine = optimal ? clipSegment(x0, y0, x1, y1, optimal.effect, optimal.cost, wtp) : null
   return (
     <svg viewBox={`0 0 ${w} ${h}`} role="img" className="plot">
-      <line x1={pad.l} y1={Y(y0)} x2={pad.l} y2={Y(y1)} stroke="currentColor" opacity="0.35" />
-      <line x1={X(x0)} y1={h - pad.b} x2={X(x1)} y2={h - pad.b} stroke="currentColor" opacity="0.35" />
-      {line.length === 2 && (
-        <line x1={X(line[0][0])} y1={Y(line[0][1])} x2={X(line[1][0])} y2={Y(line[1][1])} stroke="#b5811a" strokeDasharray="5 4" />
-      )}
-      <polyline fill="none" stroke="#1f6b4c" strokeWidth="2.2" points={frontier.map((row) => `${X(row.effect)},${Y(row.cost)}`).join(' ')} />
-      {rows.map((row, index) => (
-        <g key={row.id}>
-          <circle
-            cx={X(row.effect)}
-            cy={Y(row.cost)}
-            r={row.id === cea.optimalId ? 7 : 5.5}
-            fill={row.onFrontier ? strategyColor(index) : 'transparent'}
-            stroke={strategyColor(index)}
-            strokeWidth="2"
-          />
-          <text x={X(row.effect) + 8} y={Y(row.cost) - 8} fontSize="12">
-            {row.name}
+      {yTicks.map((tick) => (
+        <g key={`y${tick}`}>
+          <line x1={pad.l} y1={Y(tick)} x2={w - pad.r} y2={Y(tick)} stroke="currentColor" opacity="0.12" />
+          <text x={pad.l - 8} y={Y(tick) + 4} textAnchor="end" fontSize="11" fill="currentColor">
+            {formatY(tick)}
           </text>
         </g>
       ))}
-      <text x={w / 2} y={h - 8} textAnchor="middle" fontSize="12" opacity="0.7">
-        {formatX(x0)} → {formatX(x1)}
-      </text>
-      <text x={14} y={20} fontSize="12" opacity="0.7">
-        {formatY(y1)}
-      </text>
+      {xTicks.map((tick) => (
+        <text key={`x${tick}`} x={X(tick)} y={h - pad.b + 16} textAnchor="middle" fontSize="11" fill="currentColor">
+          {formatX(tick)}
+        </text>
+      ))}
+      <line x1={pad.l} y1={pad.t} x2={pad.l} y2={h - pad.b} stroke="currentColor" opacity="0.45" />
+      <line x1={pad.l} y1={h - pad.b} x2={w - pad.r} y2={h - pad.b} stroke="currentColor" opacity="0.45" />
+      <text x={16} y={18} fontSize="11" fill="currentColor">{yLabel}</text>
+      <text x={w - pad.r} y={h - 8} textAnchor="end" fontSize="11" fill="currentColor">{xLabel}</text>
+      {wtpLine && (
+        <line x1={X(wtpLine[0])} y1={Y(wtpLine[1])} x2={X(wtpLine[2])} y2={Y(wtpLine[3])} stroke="#b5811a" strokeDasharray="5 4" />
+      )}
+      <polyline fill="none" stroke="#1f6b4c" strokeWidth="2.2" points={frontier.map((row) => `${X(row.effect)},${Y(row.cost)}`).join(' ')} />
+      {rows.map((row, index) => {
+        const px = X(row.effect)
+        const py = Y(row.cost)
+        const labelLeft = px > w - 110
+        return (
+          <g key={row.id}>
+            <circle cx={px} cy={py} r={row.id === cea.optimalId ? 6.5 : 5} fill={row.onFrontier ? strategyColor(index) : 'transparent'} stroke={strategyColor(index)} strokeWidth="2" />
+            <text x={labelLeft ? px - 8 : px + 8} y={py - 8} textAnchor={labelLeft ? 'end' : 'start'} fontSize="11" fill="currentColor">
+              {row.name}
+            </text>
+          </g>
+        )
+      })}
     </svg>
   )
+}
+
+function paddedDomain(values: number[]): [number, number] {
+  let lo = Math.min(...values)
+  let hi = Math.max(...values)
+  const span = hi - lo
+  const pad = span < 1e-9 ? Math.max(Math.abs(lo) * 0.08, 0.5) : span * 0.22
+  lo -= pad
+  hi += pad
+  return [lo, hi]
+}
+
+function tickValues(lo: number, hi: number, count: number): number[] {
+  return Array.from({ length: count }, (_, index) => lo + ((hi - lo) * index) / (count - 1))
+}
+
+/** Segment of the willingness-to-pay line through (effect, cost) that stays inside the plot. */
+function clipSegment(x0: number, y0: number, x1: number, y1: number, effect: number, cost: number, wtp: number): [number, number, number, number] | null {
+  const points: Array<[number, number]> = []
+  const candidates = [x0, x1]
+  for (const x of candidates) {
+    const y = cost + wtp * (x - effect)
+    if (y >= y0 - 1e-9 && y <= y1 + 1e-9) points.push([x, Math.min(y1, Math.max(y0, y))])
+  }
+  for (const y of [y0, y1]) {
+    if (Math.abs(wtp) < 1e-12) continue
+    const x = effect + (y - cost) / wtp
+    if (x >= x0 - 1e-9 && x <= x1 + 1e-9) points.push([Math.min(x1, Math.max(x0, x)), y])
+  }
+  if (points.length < 2) return null
+  return [points[0][0], points[0][1], points[points.length - 1][0], points[points.length - 1][1]]
 }
 
 export function LineChart({

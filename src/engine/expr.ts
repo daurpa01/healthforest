@@ -192,6 +192,14 @@ function evalCall(name: string, args: Expr[], scope: EvalScope): number {
       const time = values[2]
       return value / Math.pow(1 + rate, time)
     }
+    case 'annuity':
+    case 'anualidad': {
+      const rate = need(values, 2, name)
+      const periods = values[1]
+      if (Math.abs(rate) < 1e-12) return periods
+      // TreeAge Annuity(rate; periods): present value of 1 per period for `periods` periods.
+      return (1 - Math.pow(1 + rate, -periods)) / rate
+    }
     default:
       throw new EngineError('unknown-function', name)
   }
