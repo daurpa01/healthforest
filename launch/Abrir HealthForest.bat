@@ -1,3 +1,2 @@
 @echo off
-cd /d "%~dp0.."
-python scripts\servir.py
+start "" "%~dp0..\Abrir HealthForest.html"

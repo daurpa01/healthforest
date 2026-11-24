@@ -221,6 +221,23 @@ tr.dim td { color: var(--muted); }
 .var-card { border: 1px solid var(--line); border-radius: 14px; padding: 10px; margin-bottom: 8px; background: var(--panel-2); }
 .modal-back { position: fixed; inset: 0; background: rgba(16, 24, 20, 0.35); display: grid; place-items: center; z-index: 6; }
 .modal { max-width: 560px; }
+.help-modal { max-height: min(80vh, 640px); overflow: auto; }
+.guide-list { margin: 8px 0 12px; padding-left: 18px; }
+.guide-list a { color: var(--leaf); }
+.tour {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 7;
+  width: min(380px, calc(100vw - 40px));
+  background: var(--panel);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  padding: 16px 18px 14px;
+}
+.tour h3 { margin: 4px 0 8px; font-family: var(--display); font-size: 22px; }
 .plot { width: 100%; height: auto; }
 .foot { padding: 6px 18px 10px; color: var(--muted); font-size: 12px; }
 

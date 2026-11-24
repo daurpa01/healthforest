@@ -1,0 +1,40 @@
+name: Reportar un error
+description: Algo no funcionó como esperabas
+title: "[Error] "
+labels: ["bug"]
+body:
+  - type: textarea
+    attributes:
+      label: Qué estabas haciendo
+      description: Cuéntalo como se lo contarías a un colega. No hace falta lenguaje técnico.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Qué esperabas
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Qué ocurrió
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: Dónde lo abriste
+      options:
+        - En línea (GitHub Pages)
+        - Archivo HTML (doble clic)
+        - Instalador
+        - No lo sé
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Navegador
+      description: Por ejemplo Chrome, Edge o Firefox, y la versión si la sabes.
+      placeholder: Chrome 131
+  - type: textarea
+    attributes:
+      label: Modelo
+      description: Si puedes, adjunta el archivo .healthforest.json o .trex. Quita datos de pacientes antes de subirlo.

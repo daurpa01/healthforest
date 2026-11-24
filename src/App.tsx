@@ -8,6 +8,7 @@ import { t, tError } from './i18n'
 import { TreeCanvas } from './components/TreeCanvas'
 import { DataPanel, Inspector, Outline } from './components/panels'
 import { HomeView } from './components/home'
+import { FirstRunTour, HelpDialog } from './components/help'
 
 const ResultsView = lazy(() => import('./components/views').then((module) => ({ default: module.ResultsView })))
 const MarkovView = lazy(() => import('./components/views').then((module) => ({ default: module.MarkovView })))
@@ -170,17 +171,8 @@ function Shell() {
         </div>
         <footer className="foot">{readyMs !== null ? t(lang, 'readyMs', { ms: readyMs }) : ''}</footer>
       </div>
-      {app.help && (
-        <div className="modal-back" onClick={() => app.setHelp(false)}>
-          <div className="card modal" onClick={(event) => event.stopPropagation()}>
-            <h3>{t(lang, 'help')}</h3>
-            <p>{t(lang, 'helpBody')}</p>
-            <p className="help">{t(lang, 'formulaHint')}</p>
-            <p className="help">{t(lang, 'hintProb')}</p>
-            <button className="btn" onClick={() => app.setHelp(false)}>{t(lang, 'close')}</button>
-          </div>
-        </div>
-      )}
+      <HelpDialog />
+      <FirstRunTour />
     </div>
   )
 }

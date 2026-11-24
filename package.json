@@ -7,7 +7,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && vite build && node scripts/copy-opener.mjs",
     "test": "vitest run",
     "preview": "vite preview",
     "export-examples": "node --experimental-strip-types scripts/export-examples.ts",

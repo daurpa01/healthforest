@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+title: HealthForest
+message: Si usas HealthForest en un trabajo, cítalo con estos datos.
+type: software
+authors:
+  - family-names: Uribe
+    given-names: Daniel
+repository-code: https://github.com/daurpa01/healthforest
+url: https://daurpa01.github.io/healthforest/
+abstract: >-
+  Programa libre para evaluación económica en salud. Árboles de decisión,
+  modelos de Markov, costo-efectividad, sensibilidad, Monte Carlo e impacto
+  presupuestal. Los cálculos ocurren en el navegador.
+keywords:
+  - health economics
+  - cost-effectiveness
+  - Markov model
+  - budget impact
+license: MIT
+version: 0.1.0
+date-released: 2026-11-24

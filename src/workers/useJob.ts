@@ -1,4 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
+import SimWorker from './sim.worker.ts?worker&inline'
 
 export interface JobProgress {
   running: boolean
@@ -21,7 +22,7 @@ export function useJob(): JobProgress {
 
   const start = useCallback((job: Record<string, unknown>) => {
     worker.current?.terminate()
-    const next = new Worker(new URL('./sim.worker.ts', import.meta.url), { type: 'module' })
+    const next = new SimWorker()
     worker.current = next
     const id = ++seq.current
     setRunning(true)

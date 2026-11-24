@@ -1,13 +1,17 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react'
+import { viteSingleFile } from 'vite-plugin-singlefile'
 
 export default defineConfig({
   base: './',
-  plugins: [react()],
+  plugins: [react(), viteSingleFile({ useRecommendedBuildConfig: true, deleteInlinedFiles: true })],
+  worker: {
+    format: 'iife',
+  },
   build: {
     target: 'es2022',
-    cssCodeSplit: true,
-    chunkSizeWarningLimit: 600,
+    cssCodeSplit: false,
+    chunkSizeWarningLimit: 2000,
   },
   server: {
     port: 5173,

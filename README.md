@@ -1,108 +1,107 @@
 # HealthForest
 
-Programa libre para evaluación económica en salud: árboles de decisión, modelos de Markov, costo-efectividad, sensibilidad y presupuesto. Los cálculos ocurren en el navegador. No hay servidor y los modelos no salen del equipo.
+Un programa libre para evaluar costos y resultados en salud. Dibujas un árbol o un modelo de Markov y ves el costo, los años de vida ajustados por calidad y el resultado incremental. Todo ocurre en tu computador: no hay cuenta y tus modelos no se envían a ningún servidor.
 
-![Inicio](docs/screenshots/inicio.png)
+## Elige cómo abrirlo
 
-![Editor del árbol](docs/screenshots/editor.png)
+[![Usar en línea](https://img.shields.io/badge/Usar%20en%20l%C3%ADnea-abrir%20en%20el%20navegador-1f7a56?style=for-the-badge)](https://daurpa01.github.io/healthforest/)
+[![Descargar instalador](https://img.shields.io/badge/Descargar%20instalador-Windows%20·%20macOS%20·%20Linux-b5811a?style=for-the-badge)](https://github.com/daurpa01/healthforest/releases/latest)
+[![Descargar ZIP](https://img.shields.io/badge/Descargar%20ZIP-sin%20instalar%20nada-1e4d7b?style=for-the-badge)](https://github.com/daurpa01/healthforest/archive/refs/heads/main.zip)
 
-![Resultados de costo-efectividad](docs/screenshots/resultados.png)
+No necesitas Python, Node ni permisos de administrador.
 
-![Impacto presupuestal](docs/screenshots/presupuesto.png)
+| Si quieres… | Haz esto |
+| --- | --- |
+| Probarlo ya | Pulsa **Usar en línea**. |
+| Tenerlo en el escritorio | Pulsa **Descargar instalador** y abre el archivo de tu sistema. |
+| Una carpeta que funciona sin internet | Pulsa **Descargar ZIP**, descomprímela y haz doble clic en `Abrir HealthForest.html`. |
 
-## Cómo abrirlo
+![Tres pasos: ejemplo, árbol y resultado](docs/guia/img/inicio.gif)
 
-Hace falta un navegador actual (Chrome, Edge, Firefox o Safari). No hace falta instalar Node para usar la copia ya construida.
+## Tres pasos
 
-1. Descargue el repositorio como ZIP (Código → Download ZIP) y descomprímalo.
-2. En esa carpeta, abra `launch`:
-   - Windows: doble clic en `Abrir HealthForest.bat` (usa Python, que viene en muchas instalaciones; si no está, instale Python 3 desde python.org).
-   - macOS: doble clic en `Abrir HealthForest.command`.
-   - Linux: `./launch/Abrir HealthForest.sh`.
-3. Se abre `http://127.0.0.1:4173`. En la portada elija **Árbol de decisión** o **Modelo de Markov**.
-4. Guarde su trabajo con **Guardar**. El archivo `.healthforest.json` se puede volver a abrir y compartir.
+1. Abre HealthForest con una de las tres opciones de arriba.
+2. En la portada, pulsa **Abrir ejemplo** en **Árbol de decisión**.
+3. Entra a **Resultados**. Ahí ves el costo, el efecto y el RCEI.
 
-La interfaz está en español. El botón **EN** pasa al inglés. El pie de página muestra cuánto tardó en quedar lista la interfaz.
+La primera vez aparece un recorrido corto. Puedes saltarlo. El botón **?** vuelve a abrirlo y lista las guías.
 
-También se puede publicar en GitHub Pages: en el repositorio, Settings → Pages → Source: GitHub Actions. El flujo `.github/workflows/pages.yml` publica la carpeta `dist` en cada cambio de `main`.
+Las guías, con capturas, están en [docs/guia](docs/guia/es/index.md): tu primer árbol, Markov, sensibilidad, Monte Carlo, presupuesto, importar TreeAge y exportar figuras. También hay un [glosario](docs/guia/es/glosario.md) y [preguntas frecuentes](docs/guia/es/preguntas.md).
 
-### Instalador de escritorio
+Si el doble clic no abre el navegador, los archivos de la carpeta `launch` solo abren ese mismo HTML. Son opcionales.
 
-Los instaladores de Windows, macOS y Linux se generan al publicar una etiqueta `v*` (por ejemplo `v0.1.0`) con el flujo `.github/workflows/release.yml` (Tauri). Quedan como borrador en GitHub Releases. El perfil de compilación recorta y compacta el binario. El peso del instalador lo marca sobre todo el visor web del sistema, no el modelo: la aplicación en sí pesa unos cientos de kilobytes.
+## Qué puedes hacer
 
-Quien compile en su máquina necesita Node 22, Rust y las librerías de Tauri 2. Luego: `npm ci`, `npm run build` y `npm run tauri:build` si tiene la CLI de Tauri (`npx @tauri-apps/cli build`).
+- Dibujar un árbol de izquierda a derecha: decisión, azar, terminal, Markov, lógico y clon. Zoom, minimapa y ruta óptima.
+- Usar `#` para la probabilidad que falta, pagos, variables y fórmulas (`discount`, `annuity`, tablas con `nombre[edad]`).
+- Ver el rollback, la tabla incremental, el RCEI, la dominancia fuerte y la extendida, la frontera y el beneficio neto.
+- Armar un Markov de cohorte: recompensas inicial, incremental y final, medio ciclo, corrección dentro del ciclo, Simpson, túneles, `_stage` y `_age`, tablas, descuento y traza.
+- Ver el diagrama de estados y el costo de cada periodo, y exportarlo a CSV.
+- Correr una microsimulación con semilla, rastreadores y remuestreo.
+- Hacer sensibilidad de una vía, tornado, dos vías y umbral.
+- Correr Monte Carlo (beta, gamma, lognormal, normal, uniforme, triangular, Dirichlet y normal multivariada), con plano, CEAC, CEAF, EVPI y una estimación de EVPPI.
+- Calcular el impacto presupuestal: población, adopción, mundo actual y mundo nuevo.
+- Usar supervivencia particionada, simulación por eventos y un modelo infeccioso sencillo (SIR).
+- Calibrar un parámetro a un objetivo.
+- Poner pagos en nodos intermedios y leer el informe de caminos.
+- Importar un archivo `.trex` de TreeAge (árbol o Markov, con tablas y distribuciones).
+- Cambiar el tema (claro, oscuro o de publicación) y exportar el árbol a SVG, PNG y PDF.
+- Guardar tu modelo como `.healthforest.json` y volver a abrirlo.
 
-## Qué puede hacer ahora
+La interfaz abre en español. **EN** la pasa al inglés.
 
-- Dibujar un árbol de izquierda a derecha: decisión, azar, terminal, Markov, lógico y clon.
-- Probabilidad `#` como complemento, pagos de costo y efecto, variables y fórmulas.
-- Rollback, tabla incremental, RCEI, dominancia fuerte y extendida, frontera, umbral de pago y beneficio neto.
-- Markov de cohorte: recompensas inicial / incremental / final, corrección dentro del ciclo, Simpson, túneles, `_stage` y `_age`, tablas, descuento y traza.
-- Microsimulación con semilla, rastreadores y distribuciones por paciente (en un hilo aparte, con barra de progreso y cancelar).
-- Sensibilidad de una vía, tornado, dos vías y umbral.
-- Monte Carlo de segundo orden (beta, gamma, lognormal, normal, uniforme, triangular, Dirichlet, normal multivariada y más), plano, CEAC, CEAF, EVPI y una estimación de EVPPI.
-- Presupuesto al estilo ISPOR: población, adopción, mundo actual y nuevo, impacto anual y acumulado, sensibilidad.
-- Temas claro, oscuro y de publicación. Exportar el árbol a SVG, PNG y PDF, y las tablas a CSV.
-- Tres ejemplos: un árbol simple, una enfermedad crónica y el árbol de vacunas IECS 2017 importado de TreeAge (`.trex`). La comparación con las cuentas hechas a mano está en [docs/validation.md](docs/validation.md).
+## Citarlo
 
-El mapa de lo que falta para parecerse del todo a TreeAge Pro está en [docs/treeage-parity.md](docs/treeage-parity.md).
-
-## Para quien programa
-
-```bash
-npm ci
-npm test
-npm run dev
-npm run build
-```
-
-El motor está en `src/engine` y no depende de React. Los tests comparan rollback, RCEI, Markov (con descuento, WCC y túnel), microsimulación, Monte Carlo con semilla y presupuesto contra cuentas hechas a mano.
-
-La carga inicial (gzip) es aproximadamente: HTML 0,4 KB, CSS 2,9 KB y JavaScript 105 KB. Gráficos de resultados, Markov, sensibilidad, Monte Carlo y presupuesto van en otro archivo de unos 9 KB gzip y solo se bajan al abrir esa pantalla. El worker de simulación (41 KB sin comprimir) se descarga al pulsar Simular. En esta máquina la interfaz quedó lista en 145 ms.
+Si usas HealthForest en un trabajo, cita el archivo [CITATION.cff](CITATION.cff).
 
 Licencia MIT. Copyright 2026 Daniel Uribe.
+
+Si algo falla o quieres una función, abre un issue en GitHub. Hay plantillas para errores y para ideas.
 
 ---
 
 # HealthForest
 
-A free program for health economic evaluation: decision trees, Markov models, cost-effectiveness, sensitivity analysis and budget impact. Every calculation runs in the browser. There is no server, and models stay on your computer.
+A free program for weighing costs and health outcomes. You draw a tree or a Markov model and see the cost, the quality-adjusted life years and the incremental result. Everything runs on your computer: there is no account, and your models are not uploaded.
 
-## How to open it
+## Pick how to open it
 
-You need a current browser. You do not need Node to use the prebuilt copy.
+[![Use online](https://img.shields.io/badge/Use%20online-open%20in%20the%20browser-1f7a56?style=for-the-badge)](https://daurpa01.github.io/healthforest/)
+[![Download installer](https://img.shields.io/badge/Download%20installer-Windows%20·%20macOS%20·%20Linux-b5811a?style=for-the-badge)](https://github.com/daurpa01/healthforest/releases/latest)
+[![Download ZIP](https://img.shields.io/badge/Download%20ZIP-nothing%20to%20install-1e4d7b?style=for-the-badge)](https://github.com/daurpa01/healthforest/archive/refs/heads/main.zip)
 
-1. Download the repository as a ZIP and unzip it.
-2. In the `launch` folder:
-   - Windows: double-click `Abrir HealthForest.bat` (it uses Python 3).
-   - macOS: double-click `Abrir HealthForest.command`.
-   - Linux: `./launch/Abrir HealthForest.sh`.
-3. The app opens at `http://127.0.0.1:4173`. On the welcome screen, open the decision-tree example or the Markov example.
-4. Use **Save** to download a `.healthforest.json` file you can open again or share.
+You do not need Python, Node or an administrator password.
 
-The interface starts in Spanish. **EN** switches it to English.
+| If you want… | Do this |
+| --- | --- |
+| To try it now | Click **Use online**. |
+| An icon on your desktop | Click **Download installer** and open the file for your system. |
+| A folder that works offline | Click **Download ZIP**, unzip it and double-click `Abrir HealthForest.html`. |
 
-GitHub Pages: in the repository, Settings → Pages → GitHub Actions. The workflow publishes `dist` on every push to `main`.
+![Three steps: example, tree and result](docs/guia/img/inicio.gif)
 
-Desktop installers for Windows, macOS and Linux are built when a `v*` tag is pushed (`.github/workflows/release.yml`, Tauri) and uploaded as a draft GitHub Release. The release build is stripped and size-optimised. Installer size is dominated by the system web view; the app assets themselves are a few hundred kilobytes.
+## Three steps
 
-## What works in this version
+1. Open HealthForest with one of the three choices above.
+2. On the welcome screen, click **Open example** on **Decision tree**.
+3. Open **Results**. You will see the cost, the effect and the ICER.
 
-Decision trees (decision, chance, terminal, Markov, logic, clone), complement probabilities, formulas, rollback, ICERs, strong and extended dominance, the efficient frontier, willingness to pay and net benefit. Cohort Markov models with initial, incremental and final rewards, within-cycle correction, Simpson integration, tunnels, `_stage` and `_age`, lookup tables, discounting and a trace. Seeded microsimulation in a worker, with progress and cancel. One-way, tornado, two-way and threshold sensitivity. Second-order Monte Carlo with the usual distributions, plus the CE plane, CEAC, CEAF, EVPI and a binned EVPPI estimate. An ISPOR-style budget impact module. Light, dark and publication themes. SVG, PNG, PDF and CSV export. Three examples, including an IECS 2017 vaccine tree imported from TreeAge. The comparison is in [docs/validation.md](docs/validation.md).
+The first time, a short tour appears. You can skip it. The **?** button starts it again and lists the guides.
 
-The gap to full TreeAge Pro parity is listed in [docs/treeage-parity.md](docs/treeage-parity.md).
+Illustrated guides are in [docs/guia](docs/guia/en/index.md): your first tree, Markov, sensitivity, Monte Carlo, budget impact, TreeAge import and figure export. There is also a [glossary](docs/guia/en/glossary.md) and an [FAQ](docs/guia/en/faq.md).
 
-## For developers
+If a double-click does not open the browser, the files in `launch` only open that same HTML file. They are optional.
 
-```bash
-npm ci
-npm test
-npm run dev
-npm run build
-```
+## What you can do
 
-The calculation engine lives in `src/engine` and does not import React. Tests check rollback, ICERs, Markov discounting and within-cycle correction, microsimulation, seeded Monte Carlo and budget impact against hand-calculated values.
+Draw a left-to-right tree (decision, chance, terminal, Markov, logic and clone) with zoom, a minimap and the optimal path. Use `#` for the missing probability, payoffs, variables and formulas (`discount`, `annuity`, tables as `name[age]`). See rollback, the incremental table, the ICER, strong and extended dominance, the frontier and net benefit. Build a cohort Markov model with initial, incremental and final rewards, half-cycle correction, within-cycle correction, Simpson integration, tunnels, `_stage` and `_age`, tables, discounting and a trace. Open the state diagram and the cost of each period, and export that table as CSV. Run a seeded microsimulation with trackers and bootstrap resampling. Run one-way, tornado, two-way and threshold sensitivity. Run Monte Carlo (beta, gamma, lognormal, normal, uniform, triangular, Dirichlet and multivariate normal) with the CE plane, CEAC, CEAF, EVPI and a binned EVPPI estimate. Build a budget-impact analysis. Use partitioned survival, discrete-event simulation and a simple infectious-disease (SIR) model. Calibrate one parameter to a target. Put payoffs on intermediate nodes and read the pathway report. Import a TreeAge `.trex` file (a tree or a Markov model, with tables and distributions). Switch the theme (light, dark or publication) and export the tree as SVG, PNG or PDF. Save your model as `.healthforest.json` and open it again.
 
-First load, gzipped: HTML 0.4 KB, CSS 2.9 KB, JavaScript 105 KB. Result charts and the Markov, sensitivity, Monte Carlo and budget screens are a separate 9 KB (gzip) chunk, loaded only when opened. The simulation worker (41 KB uncompressed) loads only when you press Simulate. On this machine the interface reported ready in 145 ms.
+The interface opens in Spanish. **EN** switches it to English.
+
+## Citing it
+
+If you use HealthForest in a paper, cite [CITATION.cff](CITATION.cff).
 
 MIT License. Copyright 2026 Daniel Uribe.
+
+If something breaks, or you want a feature, open a GitHub issue. There are templates for bug reports and feature requests.
