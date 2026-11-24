@@ -41,7 +41,7 @@ export function HomeView() {
             onClick={() => {
               void import('../../examples/arbol2.trex?raw').then((mod) => {
                 const model = importTrex(mod.default)
-                model.name = 'Vacunas IECS (importado de TreeAge)'
+                model.name = lang === 'en' ? 'Vaccination: tree imported from TreeAge' : 'Vacunación: árbol importado de TreeAge'
                 app.load(model, 'tree')
               })
             }}

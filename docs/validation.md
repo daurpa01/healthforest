@@ -1,6 +1,6 @@
 # Validación contra los modelos reales
 
-Los archivos `examples/arbol.trex` y `examples/arbol2.trex` son el trabajo de curso IECS 2017 (costo-efectividad de dos vacunas frente a no vacunar). HealthForest los lee con el importador de `.trex` y hace el rollback él mismo. Las cuentas de esta página se repitieron en Python, aparte del motor, para no copiar ni el documento de apoyo ni una salida de TreeAge.
+Los archivos `examples/arbol.trex` y `examples/arbol2.trex` son un árbol de vacunación importado de TreeAge (costo-efectividad de dos vacunas frente a no vacunar). HealthForest los lee con el importador de `.trex` y hace el rollback él mismo. Las cuentas de esta página se repitieron en Python, aparte del motor, para no copiar ni el documento de apoyo ni una salida de TreeAge.
 
 ## Los dos archivos no tienen las mismas fórmulas
 
@@ -145,4 +145,4 @@ El video y este archivo no describen la misma nube. El archivo, leído y corrido
 
 ## Ejemplo en la aplicación
 
-En la portada, **Vacunas IECS** abre `Arbol2.trex` ya importado, con el nombre “Vacunas IECS (importado de TreeAge)”. También se puede usar **Abrir** con cualquier `.trex`. El umbral de pago no venía en el archivo; el ejemplo usa 5000 para que la comparación se lea en la tabla.
+En la portada, **Vacunación: árbol importado de TreeAge** abre `Arbol2.trex` ya importado. También se puede usar **Abrir** con cualquier `.trex`. El umbral de pago no venía en el archivo; el ejemplo usa 5000 para que la comparación se lea en la tabla.
