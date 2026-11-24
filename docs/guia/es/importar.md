@@ -21,4 +21,4 @@ Qué conviene revisar después de importar:
 - El descuento. Si la fórmula ya usa `discount(...)`, el Markov no vuelve a descontar encima.
 - Las distribuciones. Si el archivo no tiene, el Monte Carlo no tiene nada que sortear. Puedes asignarlas tú en **Monte Carlo**.
 
-El ejemplo **Vacunación: árbol importado de TreeAge** de la portada es un árbol de vacunación ya importado. Ábrelo si quieres ver un árbol real sin tener el archivo a mano.
+El ejemplo de la portada, **Vacunación: árbol importado de TreeAge**, es un ejemplo de vacunación elaborado por Daniel Uribe (importado de TreeAge). Ábrelo si quieres ver un árbol real sin tener el archivo a mano.

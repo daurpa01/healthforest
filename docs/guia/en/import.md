@@ -21,4 +21,4 @@ What to check after importing:
 - Discounting. If a formula already uses `discount(...)`, the Markov model does not discount a second time.
 - Distributions. If the file has none, Monte Carlo has nothing to draw. You can assign them on **Monte Carlo**.
 
-The **Vaccination: tree imported from TreeAge** example on the welcome screen is a vaccination tree that is already imported. Open it if you want a real tree without having the file.
+The **Vaccination: tree imported from TreeAge** example on the welcome screen is a vaccination example by Daniel Uribe (imported from TreeAge). Open it if you want a real tree without having the file.
