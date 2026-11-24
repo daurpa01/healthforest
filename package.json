@@ -1,0 +1,29 @@
+{
+  "name": "healthforest",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Evaluación económica en salud: costo-efectividad, Markov y presupuesto. Alternativa libre a TreeAge Pro.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build && node scripts/copy-opener.mjs",
+    "test": "vitest run",
+    "preview": "vite preview",
+    "export-examples": "node --experimental-strip-types scripts/export-examples.ts",
+    "icons": "python3 scripts/make-icons.py"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8",
+    "vite-plugin-singlefile": "^2.3.4",
+    "vitest": "^5.1.1"
+  }
+}

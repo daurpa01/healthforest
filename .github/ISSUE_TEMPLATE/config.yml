@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Guías de uso
+    url: https://github.com/daurpa01/healthforest/blob/main/docs/guia/es/index.md
+    about: Empieza por las guías si la duda es de uso, no de un error del programa.

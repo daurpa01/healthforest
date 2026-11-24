@@ -1,0 +1,89 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            name: mac
+            args: --target universal-apple-darwin
+            rust_targets: aarch64-apple-darwin,x86_64-apple-darwin
+          - os: windows-latest
+            name: windows
+            args: ''
+            rust_targets: ''
+          - os: ubuntu-22.04
+            name: linux
+            args: ''
+            rust_targets: ''
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.rust_targets }}
+      - uses: swatinem/rust-cache@v2
+      - name: Dependencias de Linux
+        if: matrix.name == 'linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf build-essential libssl-dev
+      - run: npm ci
+      - name: Compilar instalador
+        run: npx --yes @tauri-apps/cli@2 build ${{ matrix.args }}
+      - name: Nombres estables
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p estable
+          copy_first() {
+            found=$(find src-tauri/target -type f -path "$1" | head -n 1 || true)
+            if [ -n "$found" ]; then cp "$found" "estable/$2"; fi
+          }
+          copy_first '*/nsis/*-setup.exe' HealthForest-Windows-Setup.exe
+          copy_first '*/msi/*.msi' HealthForest-Windows.msi
+          copy_first '*/dmg/*.dmg' HealthForest-Mac.dmg
+          copy_first '*/appimage/*.AppImage' HealthForest-Linux.AppImage
+          ls -lh estable
+          test -n "$(ls -A estable)"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: instalador-${{ matrix.name }}
+          path: estable/*
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: instalador-*
+          merge-multiple: true
+          path: instaladores
+      - name: Publicar el borrador
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          ls -lh instaladores
+          gh release create "${{ github.ref_name }}" instaladores/* \
+            --draft \
+            --title "HealthForest ${{ github.ref_name }}" \
+            --notes "Instaladores sin firma. Windows: si aparece Windows protegió su PC, elige Más información y Ejecutar de todas formas. macOS: clic derecho en la app y Abrir. iPhone: no hay un archivo instalable; abre https://daurpa01.github.io/healthforest/ en Safari y usa Compartir, Agregar a pantalla de inicio. Las guías están en la carpeta descargas del repositorio. La copia sin instalar es HealthForest-Portable.html."
