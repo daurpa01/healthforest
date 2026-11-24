@@ -35,14 +35,17 @@ export function HomeView() {
         <article className="card">
           <span className="card-index">03</span>
           <h3>{t(lang, 'welcomeVaccine')}</h3>
-          <p>{t(lang, 'welcomeVaccineBody')}</p>
+          <p>
+            {t(lang, 'welcomeVaccineBody')} <span className="byline">{t(lang, 'welcomeVaccineCredit')}</span>
+          </p>
           <button
             className="btn-gold"
             onClick={() => {
               void import('../../examples/arbol2.trex?raw').then((mod) => {
                 const model = importTrex(mod.default)
-                model.name = lang === 'en' ? 'Vaccination example by Daniel Uribe (imported from TreeAge)' : 'Ejemplo de vacunación elaborado por Daniel Uribe (importado de TreeAge)'
-                model.description = model.name
+                model.name = lang === 'en' ? 'Vaccination example (imported from TreeAge)' : 'Ejemplo de vacunación (importado de TreeAge)'
+                model.description = 'Uribe-Parra D.'
+                model.tree = { ...model.tree, notes: 'Uribe-Parra D.' }
                 app.load(model, 'tree')
               })
             }}

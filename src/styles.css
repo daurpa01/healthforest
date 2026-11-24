@@ -197,6 +197,7 @@ progress.job { width: min(420px, 100%); height: 8px; accent-color: var(--leaf); 
 .card, .panel-card, .chart-card { padding: 18px; }
 .card h3 { margin: 8px 0; font-family: var(--display); font-size: 28px; font-weight: 560; letter-spacing: -0.03em; }
 .card p { color: var(--muted); }
+.byline { display: block; margin-top: 6px; font-size: 12px; letter-spacing: 0.01em; opacity: 0.72; }
 .card-index { font-family: var(--display); color: var(--gold); letter-spacing: 0.08em; }
 .home, .solo-view { flex: 1; min-height: 0; overflow: auto; padding: 28px clamp(16px, 3vw, 40px) 48px; }
 .home-hero h2 { font-family: var(--display); font-weight: 560; font-size: clamp(40px, 5vw, 64px); letter-spacing: -0.035em; margin: 0 0 10px; max-width: 14ch; line-height: 0.95; }

@@ -46,7 +46,7 @@ Para instalarlo como una app, la carpeta [descargas](descargas/index.html) tiene
 - Usar supervivencia particionada, simulación por eventos y un modelo infeccioso sencillo (SIR).
 - Calibrar un parámetro a un objetivo.
 - Poner pagos en nodos intermedios y leer el informe de caminos.
-- Importar un archivo `.trex` de TreeAge (árbol o Markov, con tablas y distribuciones). La portada incluye un ejemplo de vacunación elaborado por Daniel Uribe (importado de TreeAge).
+- Importar un archivo `.trex` de TreeAge (árbol o Markov, con tablas y distribuciones). La portada incluye un ejemplo de vacunación importado de TreeAge.
 - Cambiar el tema (claro, oscuro o de publicación) y exportar el árbol a SVG, PNG y PDF.
 - Guardar tu modelo como `.healthforest.json` y volver a abrirlo.
 
@@ -55,6 +55,8 @@ La interfaz abre en español. **EN** la pasa al inglés.
 ## Citarlo
 
 Si usas HealthForest en un trabajo, cita el archivo [CITATION.cff](CITATION.cff).
+
+El ejemplo de vacunación es de Uribe-Parra D.
 
 Licencia MIT. Copyright 2026 Daniel Uribe.
 
@@ -98,13 +100,15 @@ To install it as an app, the [descargas](descargas/index.html) folder has the Wi
 
 ## What you can do
 
-Draw a left-to-right tree (decision, chance, terminal, Markov, logic and clone) with zoom, a minimap and the optimal path. Use `#` for the missing probability, payoffs, variables and formulas (`discount`, `annuity`, tables as `name[age]`). See rollback, the incremental table, the ICER, strong and extended dominance, the frontier and net benefit. Build a cohort Markov model with initial, incremental and final rewards, half-cycle correction, within-cycle correction, Simpson integration, tunnels, `_stage` and `_age`, tables, discounting and a trace. Open the state diagram and the cost of each period, and export that table as CSV. Run a seeded microsimulation with trackers and bootstrap resampling. Run one-way, tornado, two-way and threshold sensitivity. Run Monte Carlo (beta, gamma, lognormal, normal, uniform, triangular, Dirichlet and multivariate normal) with the CE plane, CEAC, CEAF, EVPI and a binned EVPPI estimate. Build a budget-impact analysis. Use partitioned survival, discrete-event simulation and a simple infectious-disease (SIR) model. Calibrate one parameter to a target. Put payoffs on intermediate nodes and read the pathway report. Import a TreeAge `.trex` file (a tree or a Markov model, with tables and distributions). The welcome screen includes a vaccination example by Daniel Uribe (imported from TreeAge). Switch the theme (light, dark or publication) and export the tree as SVG, PNG or PDF. Save your model as `.healthforest.json` and open it again.
+Draw a left-to-right tree (decision, chance, terminal, Markov, logic and clone) with zoom, a minimap and the optimal path. Use `#` for the missing probability, payoffs, variables and formulas (`discount`, `annuity`, tables as `name[age]`). See rollback, the incremental table, the ICER, strong and extended dominance, the frontier and net benefit. Build a cohort Markov model with initial, incremental and final rewards, half-cycle correction, within-cycle correction, Simpson integration, tunnels, `_stage` and `_age`, tables, discounting and a trace. Open the state diagram and the cost of each period, and export that table as CSV. Run a seeded microsimulation with trackers and bootstrap resampling. Run one-way, tornado, two-way and threshold sensitivity. Run Monte Carlo (beta, gamma, lognormal, normal, uniform, triangular, Dirichlet and multivariate normal) with the CE plane, CEAC, CEAF, EVPI and a binned EVPPI estimate. Build a budget-impact analysis. Use partitioned survival, discrete-event simulation and a simple infectious-disease (SIR) model. Calibrate one parameter to a target. Put payoffs on intermediate nodes and read the pathway report. Import a TreeAge `.trex` file (a tree or a Markov model, with tables and distributions). The welcome screen includes a vaccination example imported from TreeAge. Switch the theme (light, dark or publication) and export the tree as SVG, PNG or PDF. Save your model as `.healthforest.json` and open it again.
 
 The interface opens in Spanish. **EN** switches it to English.
 
 ## Citing it
 
 If you use HealthForest in a paper, cite [CITATION.cff](CITATION.cff).
+
+The vaccination example is by Uribe-Parra D.
 
 MIT License. Copyright 2026 Daniel Uribe.
 
