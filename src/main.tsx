@@ -11,3 +11,12 @@ if (root) {
     </StrictMode>,
   )
 }
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    const worker = new URL('sw.js', window.location.href)
+    navigator.serviceWorker.register(worker).catch(() => {
+      /* La app sigue funcionando si el navegador no instala el worker. */
+    })
+  })
+}

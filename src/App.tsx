@@ -9,6 +9,7 @@ import { TreeCanvas } from './components/TreeCanvas'
 import { DataPanel, Inspector, Outline } from './components/panels'
 import { HomeView } from './components/home'
 import { FirstRunTour, HelpDialog } from './components/help'
+import { IosHint } from './components/ios-hint'
 
 const ResultsView = lazy(() => import('./components/views').then((module) => ({ default: module.ResultsView })))
 const MarkovView = lazy(() => import('./components/views').then((module) => ({ default: module.MarkovView })))
@@ -80,6 +81,7 @@ function Shell() {
         </nav>
       </aside>
       <div className="main">
+        <IosHint />
         <header className="topbar">
           <div className="brand-lockup">
             <strong>Health<em>Forest</em></strong>

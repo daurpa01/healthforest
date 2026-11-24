@@ -30,6 +30,8 @@ Las guías, con capturas, están en [docs/guia](docs/guia/es/index.md): tu prime
 
 Si el doble clic no abre el navegador, los archivos de la carpeta `launch` solo abren ese mismo HTML. Son opcionales.
 
+Para instalarlo como una app, la carpeta [descargas](descargas/index.html) tiene el instalador de Windows, el disco del Mac, la copia de un solo archivo y la guía del iPhone. Daniel puede subir esa carpeta tal cual a su sitio.
+
 ## Qué puedes hacer
 
 - Dibujar un árbol de izquierda a derecha: decisión, azar, terminal, Markov, lógico y clon. Zoom, minimapa y ruta óptima.
@@ -91,6 +93,8 @@ The first time, a short tour appears. You can skip it. The **?** button starts i
 Illustrated guides are in [docs/guia](docs/guia/en/index.md): your first tree, Markov, sensitivity, Monte Carlo, budget impact, TreeAge import and figure export. There is also a [glossary](docs/guia/en/glossary.md) and an [FAQ](docs/guia/en/faq.md).
 
 If a double-click does not open the browser, the files in `launch` only open that same HTML file. They are optional.
+
+To install it as an app, the [descargas](descargas/index.html) folder has the Windows installer, the Mac disk image, the single-file copy and the iPhone guide. That folder can be uploaded to a website as it is.
 
 ## What you can do
 

@@ -238,6 +238,18 @@ tr.dim td { color: var(--muted); }
   padding: 16px 18px 14px;
 }
 .tour h3 { margin: 4px 0 8px; font-family: var(--display); font-size: 22px; }
+.ios-hint {
+  margin: 12px 16px 0;
+  padding: 12px 14px;
+  background: var(--gold-2);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+.ios-hint p { margin: 0; }
 .plot { width: 100%; height: auto; }
 .foot { padding: 6px 18px 10px; color: var(--muted); font-size: 12px; }
 
